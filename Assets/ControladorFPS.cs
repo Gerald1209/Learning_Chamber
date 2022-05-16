@@ -4,29 +4,28 @@ using UnityEngine;
 
 public class ControladorFPS : MonoBehaviour
 {
+    [Tooltip("Velocidad de Movimiento del personaje en m/s")]
+    [Range(0,10)]
+    public float speed;
 
-    Rigidbody rb;
-    Vector2 inputMov;
-    public float velCamina = 10f;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        rb = GetComponent<Rigidbody>();
-    }
+    [Tooltip("Velocidad de rotacion")]
+    [Range(0,360)]
+    public float rotationSpeed;
 
     // Update is called once per frame
     void Update()
     {
-        //leemos el input
-        inputMov.x = Input.GetAxis("Horizontal");
-        inputMov.y = Input.GetAxis("Vertical");
-    }
+        float space = speed * Time.deltaTime;
 
-    private void FixedUpdate()
-    {
-        float vel = velCamina;
-        rb.velocity = transform.forward * vel * inputMov.y // Movernos a adelante
-        + transform.right * vel * inputMov.x; //Movernos a los lados
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+
+        Vector3 dir = new Vector3(horizontal, 0, vertical);
+        transform.Translate(dir.normalized*space);
+
+        float angle = rotationSpeed * Time.deltaTime;
+        float mouseX = Input.GetAxis("Mouse X");       
+        transform.Rotate(0, mouseX * angle, 0);
     }
+    
 }
